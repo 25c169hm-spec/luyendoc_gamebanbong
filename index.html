@@ -2,1527 +2,260 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Bắn Bóng Luyện Đọc - Bản Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luyện Đọc Siêu Tốc Mobile</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Comic Sans MS', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+        :root {
+            --primary: #2196F3;
+            --success: #4CAF50;
+            --danger: #f44336;
+            --bg: #f0f2f5;
         }
-        
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-            overflow-y: auto;
-            touch-action: pan-y pinch-zoom;
-            background: linear-gradient(145deg, #1a2a3a, #0f1a24);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-        
+
         body {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 0;
+            margin: 0;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
             color: #333;
-            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        
+
         #gameContainer {
             width: 100%;
             max-width: 500px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.3);
-        }
-        
-        /* Header */
-        .game-header {
-            background: linear-gradient(145deg, #ffd700, #ffaa00);
-            padding: 15px 12px;
-            text-align: center;
-            border-bottom: 4px solid #ff6b6b;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        
-        .game-header h1 {
-            font-size: 24px;
-            color: #1a2a3a;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .game-header p {
-            font-size: 14px;
-            color: #333;
-            margin-top: 5px;
-        }
-        
-        /* Stats Bar */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            background: #1a2a3a;
-            padding: 10px;
-            gap: 5px;
-            border-bottom: 2px solid #ffd700;
-        }
-        
-        .stat-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 8px 5px;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            color: #8a9bb5;
-            margin-bottom: 4px;
-        }
-        
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
-            color: #ffd700;
-            line-height: 1.2;
-        }
-        
-        /* Input Form */
-        .input-form {
-            padding: 20px 15px;
-            background: #f8f9fa;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .input-form h2 {
-            color: #1a2a3a;
-            font-size: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-            flex: 1;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1a2a3a;
-            font-size: 14px;
-        }
-        
-        .form-textarea {
-            width: 100%;
-            height: 200px;
+            margin: 0 auto;
             padding: 15px;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        h1 { color: #ff5722; font-size: 1.5rem; margin: 10px 0; }
+
+        /* Setup Area */
+        #setup {
             background: white;
-            resize: none;
-            -webkit-appearance: none;
-        }
-        
-        .form-textarea:focus {
-            outline: none;
-            border-color: #ff6b6b;
-        }
-        
-        .form-buttons {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .form-btn {
-            flex: 1;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            -webkit-appearance: none;
-        }
-        
-        .form-btn:active {
-            transform: scale(0.98);
-        }
-        
-        .example-btn {
-            background: #ffd700;
-            color: #1a2a3a;
-        }
-        
-        .start-btn {
-            background: linear-gradient(145deg, #06D6A0, #05b586);
-            color: white;
-        }
-        
-        .form-instruction {
-            font-size: 13px;
-            color: #666;
-            text-align: center;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(255,215,0,0.1);
-            border-radius: 10px;
-        }
-        
-        /* Game Area */
-        .game-area {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            background: linear-gradient(to bottom, #87CEEB, #98FB98);
-            position: relative;
-            min-height: 0;
-            height: 100%;
-        }
-        
-        /* Reading Panel */
-        .reading-panel {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            margin: 10px;
-            padding: 15px;
-            backdrop-filter: blur(10px);
-            border: 2px solid #ffd700;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        .word-display {
-            background: linear-gradient(145deg, #ffd700, #ffaa00);
+            padding: 20px;
             border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        .current-word {
-            font-size: 36px;
-            font-weight: 800;
-            color: #1a2a3a;
-            text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
-        }
-        
-        .sentence-display {
-            background: #A2D2FF;
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            font-size: 16px;
-            color: #1D3557;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        
-        /* Mode Selector */
-        .mode-selector {
-            display: flex;
-            gap: 8px;
-            margin: 10px 0;
-            background: #f0f0f0;
-            padding: 5px;
-            border-radius: 25px;
-        }
-        
-        .mode-btn {
-            flex: 1;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            border-radius: 20px;
-            background: transparent;
-            color: #666;
-            transition: all 0.2s;
-            -webkit-appearance: none;
-        }
-        
-        .mode-btn.active {
-            background: #ffd700;
-            color: #1a2a3a;
-            box-shadow: 0 2px 8px rgba(255,215,0,0.5);
-        }
-        
-        /* Voice Status */
-        .listening-indicator {
-            background: #ffd700;
-            padding: 12px;
-            border-radius: 25px;
-            text-align: center;
-            margin: 10px 0;
-            font-weight: 600;
-            color: #1a2a3a;
-            display: none;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .mic-icon {
-            font-size: 20px;
-            margin-right: 8px;
-        }
-        
-        /* Manual Control */
-        .manual-control {
-            display: none;
-            margin: 10px 0;
-        }
-        
-        .manual-btn {
+
+        textarea {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(145deg, #06D6A0, #05b586);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
+            height: 150px;
+            font-size: 18px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        /* Game Area */
+        #word {
+            font-size: 50px; /* Nhỏ hơn một chút để không bị tràn trên mobile */
+            font-weight: bold;
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            -webkit-appearance: none;
-        }
-        
-        .manual-btn:active {
-            transform: scale(0.98);
-        }
-        
-        /* Ball Counter */
-        .ball-counter {
-            background: rgba(6,214,160,0.2);
-            padding: 12px;
-            border-radius: 25px;
-            text-align: center;
-            margin: 10px 0;
-            font-weight: 600;
-            color: #1a2a3a;
-        }
-        
-        /* Canvas Container */
-        .canvas-container {
-            flex: 1;
-            min-height: 300px;
-            background: #E9F5DB;
-            margin: 10px;
+            background: white;
+            margin: 20px 0;
             border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid #ffd700;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            position: relative;
-            touch-action: none;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
-        
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            background: #E9F5DB;
-            touch-action: none;
-        }
-        
-        /* Shoot Instruction */
-        .shoot-instruction {
-            background: rgba(255,215,0,0.3);
-            padding: 12px;
-            border-radius: 25px;
-            text-align: center;
-            margin: 10px;
-            font-weight: 600;
-            color: #1a2a3a;
-            font-size: 14px;
-        }
-        
-        /* Control Buttons */
-        .control-buttons {
+
+        /* Controls */
+        .controls {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-            padding: 10px;
-            background: #1a2a3a;
-            border-radius: 30px 30px 0 0;
-            margin-top: auto;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
-        
-        .ctrl-btn {
-            padding: 18px 10px;
+
+        button {
             font-size: 20px;
             font-weight: bold;
+            padding: 20px;
             border: none;
-            border-radius: 20px;
-            background: #ffd700;
-            color: #1a2a3a;
+            border-radius: 15px;
             cursor: pointer;
-            transition: all 0.1s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            -webkit-appearance: none;
+            transition: transform 0.1s;
             touch-action: manipulation;
         }
-        
-        .ctrl-btn:active {
-            background: #ffaa00;
-            transform: scale(0.95);
-        }
-        
-        .ctrl-btn.shoot {
-            background: #ff6b6b;
-            color: white;
-        }
-        
-        .ctrl-btn.shoot:active {
-            background: #ff4444;
-        }
-        
-        .ctrl-btn:disabled {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        
-        /* Read Button */
-        .read-btn {
-            width: calc(100% - 20px);
-            margin: 10px;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            border-radius: 30px;
-            background: linear-gradient(145deg, #ffd700, #ffaa00);
-            color: #1a2a3a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            -webkit-appearance: none;
-        }
-        
-        .read-btn.listening {
-            background: linear-gradient(145deg, #ff6b6b, #ff4444);
-            color: white;
-            animation: pulse 1s infinite;
-        }
-        
-        .read-btn:active {
-            transform: scale(0.98);
-        }
-        
-        /* New Game Button */
-        .new-game-btn {
-            width: calc(100% - 20px);
-            margin: 10px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 30px;
-            background: #1a2a3a;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            -webkit-appearance: none;
-        }
-        
-        .new-game-btn:active {
-            background: #2a3a4a;
-        }
-        
-        /* Feedback */
-        .feedback {
-            padding: 12px;
-            margin: 10px;
-            border-radius: 25px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .feedback.correct {
-            background: rgba(6,214,160,0.2);
-            color: #06D6A0;
-            border: 1px solid #06D6A0;
-        }
-        
-        .feedback.incorrect {
-            background: rgba(239,71,111,0.2);
-            color: #EF476F;
-            border: 1px solid #EF476F;
-        }
-        
-        /* Message Modal */
-        .message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 400px;
-            background: white;
-            border-radius: 30px;
-            padding: 25px;
-            text-align: center;
-            z-index: 1000;
-            display: none;
-            border: 4px solid #ffd700;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .message h2 {
-            color: #ff6b6b;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        
-        .message p {
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .close-btn {
-            padding: 15px 30px;
-            background: linear-gradient(145deg, #06D6A0, #05b586);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
+
+        button:active { transform: scale(0.95); }
+
+        #startBtn { background: var(--primary); color: white; width: 100%; }
+        #correctBtn { background: var(--success); color: white; }
+        #wrongBtn { background: var(--danger); color: white; }
+
+        /* Race Track */
+        #raceTrack {
+            position: relative;
             width: 100%;
-            -webkit-appearance: none;
+            height: 60px;
+            background: #444;
+            border-radius: 30px;
+            margin: 20px 0;
+            border: 4px solid #333;
         }
-        
-        .close-btn:active {
-            transform: scale(0.98);
+
+        #car {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 35px;
+            transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
         }
-        
-        /* Debug Info (ẩn trên mobile) */
-        .speech-debug {
-            display: none;
+
+        #finishLine {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            width: 15px;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, #fff, #fff 10px, #000 10px, #000 20px);
         }
-        
-        /* Responsive adjustments */
-        @media (max-height: 700px) {
-            .game-header { padding: 10px; }
-            .game-header h1 { font-size: 20px; }
-            .reading-panel { padding: 10px; }
-            .current-word { font-size: 28px; }
-            .ctrl-btn { padding: 15px 5px; }
+
+        #summary {
+            text-align: left;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.6;
         }
-        
-        @media (max-width: 350px) {
-            .current-word { font-size: 28px; }
-            .stat-value { font-size: 16px; }
-            .ctrl-btn { font-size: 16px; }
-        }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-    <div id="gameContainer">
-        <!-- Header -->
-        <div class="game-header">
-            <h1>
-                <span>🎯</span>
-                <span>BẮN BÓNG LUYỆN ĐỌC</span>
-                <span>🎈</span>
-            </h1>
-            <p>Chạm để xoay súng • Nhấn nút để bắn</p>
-        </div>
-        
-        <!-- Stats Bar -->
-        <div class="stats-bar" id="statsBar" style="display: none;">
-            <div class="stat-item">
-                <div class="stat-label">VÒNG</div>
-                <div class="stat-value" id="round">1</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">ĐIỂM</div>
-                <div class="stat-value" id="score">0</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">BẮN</div>
-                <div class="stat-value" id="shots">0/10</div>
-            </div>
-        </div>
-        
-        <!-- Input Form -->
-        <div class="input-form" id="inputForm">
-            <h2>
-                <span>📝</span>
-                <span>Nhập danh sách từ</span>
-            </h2>
-            
-            <div class="form-group">
-                <label class="form-label">Mỗi dòng một từ (có thể thêm câu ví dụ):</label>
-                <textarea class="form-textarea" id="wordsInput" placeholder="Ví dụ:
-anh - nhánh cây anh đào
-ach - quyển sách
-chanh - quả chanh
-sách - cuốn sách
-gạch - viên gạch
-tranh - bức tranh
-sạch - sạch sẽ
-khách - khách sạn
-tách - tách trà
-nhanh - nhanh nhẹn"></textarea>
-            </div>
-            
-            <div class="form-buttons">
-                <button class="form-btn example-btn" id="loadExampleBtn">
-                    <span>📋</span> Ví dụ
-                </button>
-                <button class="form-btn start-btn" id="startGameBtn">
-                    <span>🚀</span> Bắt đầu
-                </button>
-            </div>
-            
-            <div class="form-instruction">
-                💡 <strong>Mẹo:</strong> Nên nhập 10-20 từ để có nhiều từ luyện tập. 
-                Có thể nhập "từ - câu ví dụ" để có gợi ý.
-            </div>
-        </div>
-        
-        <!-- Game Area -->
-        <div class="game-area" id="gameArea" style="display: none;">
-            <!-- Reading Panel -->
-            <div class="reading-panel">
-                <div class="word-display">
-                    <div class="current-word" id="currentWord">Xin chào</div>
-                </div>
-                
-                <div class="sentence-display" id="sentenceDisplay">
-                    Hãy đọc từ trên thật to và rõ ràng
-                </div>
-                
-                <!-- Mode Selector -->
-                <div class="mode-selector">
-                    <button class="mode-btn active" id="voiceModeBtn">🎤 Giọng nói</button>
-                    <button class="mode-btn" id="manualModeBtn">👆 Thủ công</button>
-                </div>
-                
-                <!-- Listening Indicator -->
-                <div class="listening-indicator" id="listeningIndicator">
-                    <span class="mic-icon">🎤</span> Đang nghe... Hãy đọc to!
-                </div>
-                
-                <!-- Manual Control -->
-                <div class="manual-control" id="manualControl">
-                    <button class="manual-btn" id="manualCorrectBtn">
-                        <span>✅</span> Tôi đã đọc đúng
-                    </button>
-                </div>
-                
-                <!-- Ball Counter -->
-                <div class="ball-counter" id="ballCounter">
-                    🎯 Bóng còn lại: <span id="ballsLeft">10</span>/10
-                </div>
-            </div>
-            
-            <!-- Canvas Container -->
-            <div class="canvas-container">
-                <canvas id="gameCanvas"></canvas>
-            </div>
-            
-            <!-- Shoot Instruction -->
-            <div class="shoot-instruction" id="shootInstruction">
-                🎯 Đọc đúng từ để được bắn!
-            </div>
-            
-            <!-- Feedback -->
-            <div class="feedback" id="feedback"></div>
-            
-            <!-- Control Buttons -->
-            <div class="control-buttons">
-                <button class="ctrl-btn" id="moveLeftBtn">←</button>
-                <button class="ctrl-btn" id="moveRightBtn">→</button>
-                <button class="ctrl-btn shoot" id="shootBtn" disabled>🔫 BẮN</button>
-            </div>
-            
-            <!-- Read Button -->
-            <button class="read-btn" id="readBtn">
-                <span>🎤</span> Bắt đầu đọc từ này
-            </button>
-            
-            <!-- New Game Button -->
-            <button class="new-game-btn" id="newGameBtn">
-                <span>🔄</span> Chơi lại với từ mới
-            </button>
-        </div>
-        
-        <!-- Debug Info (ẩn) -->
-        <div class="speech-debug" id="speechDebug"></div>
-    </div>
-    
-    <!-- Message Modal -->
-    <div class="message" id="messageModal">
-        <h2 id="messageTitle">Chúc mừng!</h2>
-        <p id="messageText">Bạn đã hoàn thành lượt chơi!</p>
-        <button class="close-btn" id="closeMessageBtn">Tiếp tục</button>
+
+<div id="gameContainer">
+    <h1>🏁 Luyện Đọc Siêu Tốc 🏁</h1>
+
+    <div id="setup">
+        <p>Nhập các từ cần luyện (cách nhau bằng dấu phẩy hoặc xuống dòng):</p>
+        <textarea id="wordInput" placeholder="Ví dụ: con mèo, cái bàn, ngôi nhà..."></textarea>
+        <button id="startBtn">BẮT ĐẦU CHƠI</button>
+        <p id="setupMessage" style="color: red; font-size: 14px;"></p>
     </div>
 
-    <script>
-        (function() {
-            "use strict";
-            
-            // Kiểm tra môi trường
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const isAndroid = /Android/.test(navigator.userAgent);
-            
-            // Speech Recognition
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const isSpeechSupported = SpeechRecognition != null;
-            
-            // DOM Elements
-            const elements = {
-                inputForm: document.getElementById('inputForm'),
-                statsBar: document.getElementById('statsBar'),
-                gameArea: document.getElementById('gameArea'),
-                wordsInput: document.getElementById('wordsInput'),
-                loadExampleBtn: document.getElementById('loadExampleBtn'),
-                startGameBtn: document.getElementById('startGameBtn'),
-                currentWord: document.getElementById('currentWord'),
-                sentenceDisplay: document.getElementById('sentenceDisplay'),
-                round: document.getElementById('round'),
-                score: document.getElementById('score'),
-                shots: document.getElementById('shots'),
-                ballsLeft: document.getElementById('ballsLeft'),
-                readBtn: document.getElementById('readBtn'),
-                newGameBtn: document.getElementById('newGameBtn'),
-                feedback: document.getElementById('feedback'),
-                voiceModeBtn: document.getElementById('voiceModeBtn'),
-                manualModeBtn: document.getElementById('manualModeBtn'),
-                listeningIndicator: document.getElementById('listeningIndicator'),
-                manualControl: document.getElementById('manualControl'),
-                manualCorrectBtn: document.getElementById('manualCorrectBtn'),
-                shootInstruction: document.getElementById('shootInstruction'),
-                ballCounter: document.getElementById('ballCounter'),
-                moveLeftBtn: document.getElementById('moveLeftBtn'),
-                moveRightBtn: document.getElementById('moveRightBtn'),
-                shootBtn: document.getElementById('shootBtn'),
-                messageModal: document.getElementById('messageModal'),
-                messageTitle: document.getElementById('messageTitle'),
-                messageText: document.getElementById('messageText'),
-                closeMessageBtn: document.getElementById('closeMessageBtn'),
-                speechDebug: document.getElementById('speechDebug'),
-                canvas: document.getElementById('gameCanvas')
-            };
-            
-            // Game State
-            const gameState = {
-                wordList: [],
-                currentWordIndex: 0,
-                round: 1,
-                score: 0,
-                shots: 0,
-                maxShots: 10,
-                canShoot: false,
-                gameActive: false,
-                gameMode: 'voice', // 'voice' hoặc 'manual'
-                isListening: false,
-                recognition: null,
-                
-                // Game objects
-                balls: [],
-                bullets: [],
-                cannon: {
-                    x: 0,
-                    y: 0,
-                    width: 50,
-                    height: 30,
-                    angle: 0,
-                    speed: 8
-                },
-                
-                // Touch control
-                touchX: 0,
-                touchY: 0,
-                leftPressed: false,
-                rightPressed: false
-            };
-            
-            // Canvas context
-            let ctx = null;
-            
-            // ===== HELPER FUNCTIONS =====
-            
-            function debugLog(msg) {
-                console.log('[DEBUG]', msg);
-                if (elements.speechDebug) {
-                    elements.speechDebug.innerHTML = msg;
-                }
-            }
-            
-            function parseWordsInput(text) {
-                const lines = text.split('\n');
-                const result = [];
-                
-                for (let line of lines) {
-                    line = line.trim();
-                    if (!line) continue;
-                    
-                    if (line.includes('-')) {
-                        const parts = line.split('-');
-                        const word = parts[0].trim();
-                        const sentence = parts.slice(1).join('-').trim();
-                        if (word) {
-                            result.push({ word, sentence: sentence || `Hãy đọc từ "${word}"` });
-                        }
-                    } else {
-                        result.push({ word: line, sentence: `Hãy đọc từ "${line}"` });
-                    }
-                }
-                
-                return result;
-            }
-            
-            function loadExampleWords() {
-                elements.wordsInput.value = `anh - nhánh cây anh đào
-ach - quyển sách
-chanh - quả chanh
-sách - cuốn sách, tủ sách
-gạch - viên gạch
-tranh - bức tranh
-sạch - sạch sẽ
-khách - khách sạn
-tách - tách trà
-nhanh - nhanh nhẹn
-thanh - thanh kẹo
-lành - hiền lành
-bánh - bánh chưng`;
-            }
-            
-            function getRandomColor() {
-                const colors = ['#FF6B6B', '#06D6A0', '#118AB2', '#FFD166', '#EF476F', '#A2D2FF', '#9D4EDD', '#FF9E00'];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-            
-            function darkenColor(color, amount) {
-                let r = parseInt(color.substring(1, 3), 16);
-                let g = parseInt(color.substring(3, 5), 16);
-                let b = parseInt(color.substring(5, 7), 16);
-                
-                r = Math.max(0, Math.floor(r * (1 - amount)));
-                g = Math.max(0, Math.floor(g * (1 - amount)));
-                b = Math.max(0, Math.floor(b * (1 - amount)));
-                
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-            
-            function calculateSimilarity(str1, str2) {
-                if (!str1 || !str2) return 0;
-                str1 = str1.toLowerCase().replace(/\s+/g, '');
-                str2 = str2.toLowerCase().replace(/\s+/g, '');
-                
-                let matches = 0;
-                const minLength = Math.min(str1.length, str2.length);
-                const maxLength = Math.max(str1.length, str2.length);
-                
-                for (let i = 0; i < minLength; i++) {
-                    if (str1[i] === str2[i]) matches++;
-                }
-                
-                return maxLength > 0 ? matches / maxLength : 0;
-            }
-            
-            // ===== SPEECH RECOGNITION =====
-            
-            function initSpeechRecognition() {
-                if (!isSpeechSupported) {
-                    debugLog("Trình duyệt không hỗ trợ nhận diện giọng nói");
-                    gameState.gameMode = 'manual';
-                    updateModeDisplay();
-                    return;
-                }
-                
-                try {
-                    gameState.recognition = new SpeechRecognition();
-                    gameState.recognition.lang = 'vi-VN';
-                    gameState.recognition.continuous = false;
-                    gameState.recognition.interimResults = false;
-                    gameState.recognition.maxAlternatives = 3;
-                    
-                    gameState.recognition.onstart = () => {
-                        gameState.isListening = true;
-                        elements.readBtn.classList.add('listening');
-                        elements.readBtn.innerHTML = '<span>🎤</span> Đang nghe...';
-                        elements.listeningIndicator.style.display = 'block';
-                        elements.feedback.textContent = "🎤 Đang nghe... Hãy đọc to từ trên màn hình!";
-                        elements.feedback.className = "feedback";
-                        debugLog("Đang nghe...");
-                    };
-                    
-                    gameState.recognition.onend = () => {
-                        gameState.isListening = false;
-                        elements.readBtn.classList.remove('listening');
-                        elements.readBtn.innerHTML = '<span>🎤</span> Bắt đầu đọc từ này';
-                        elements.listeningIndicator.style.display = 'none';
-                        
-                        if (gameState.gameActive && gameState.gameMode === 'voice' && !gameState.canShoot) {
-                            setTimeout(() => {
-                                if (!gameState.isListening && gameState.gameActive) {
-                                    startListening();
-                                }
-                            }, 1000);
-                        }
-                    };
-                    
-                    gameState.recognition.onresult = (event) => {
-                        const result = event.results[0][0].transcript.toLowerCase().trim();
-                        const currentWord = gameState.wordList[gameState.currentWordIndex].word.toLowerCase();
-                        
-                        debugLog(`Nhận: "${result}" - Cần: "${currentWord}"`);
-                        
-                        let isCorrect = false;
-                        
-                        if (result === currentWord) {
-                            isCorrect = true;
-                        } else if (result.includes(currentWord)) {
-                            isCorrect = true;
-                        } else if (calculateSimilarity(result, currentWord) > 0.7) {
-                            isCorrect = true;
-                        } else {
-                            for (let i = 1; i < event.results[0].length; i++) {
-                                const alt = event.results[0][i].transcript.toLowerCase().trim();
-                                if (alt === currentWord || alt.includes(currentWord) || 
-                                    calculateSimilarity(alt, currentWord) > 0.7) {
-                                    isCorrect = true;
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        handleReadingResult(isCorrect, result);
-                    };
-                    
-                    gameState.recognition.onerror = (event) => {
-                        debugLog(`Lỗi nhận diện: ${event.error}`);
-                        
-                        if (event.error === 'not-allowed') {
-                            elements.feedback.textContent = "❌ Vui lòng cho phép sử dụng microphone!";
-                            elements.feedback.className = "feedback incorrect";
-                            
-                            setTimeout(() => {
-                                gameState.gameMode = 'manual';
-                                updateModeDisplay();
-                                elements.feedback.textContent = "Đã chuyển sang chế độ thủ công.";
-                            }, 2000);
-                        } else if (event.error === 'no-speech') {
-                            elements.feedback.textContent = "Không nghe thấy, hãy đọc to hơn!";
-                            elements.feedback.className = "feedback incorrect";
-                        }
-                        
-                        gameState.isListening = false;
-                        elements.readBtn.classList.remove('listening');
-                        elements.readBtn.innerHTML = '<span>🎤</span> Bắt đầu đọc từ này';
-                        elements.listeningIndicator.style.display = 'none';
-                    };
-                    
-                    debugLog("Speech Recognition đã sẵn sàng");
-                } catch (e) {
-                    debugLog(`Lỗi khởi tạo: ${e.message}`);
-                    gameState.gameMode = 'manual';
-                    updateModeDisplay();
-                }
-            }
-            
-            function startListening() {
-                if (gameState.gameMode !== 'voice' || !isSpeechSupported || gameState.isListening || !gameState.gameActive) return;
-                
-                try {
-                    if (gameState.recognition) {
-                        gameState.recognition.start();
-                    } else {
-                        initSpeechRecognition();
-                        setTimeout(() => {
-                            if (gameState.recognition) gameState.recognition.start();
-                        }, 500);
-                    }
-                } catch (e) {
-                    debugLog(`Lỗi start: ${e.message}`);
-                }
-            }
-            
-            function handleReadingResult(isCorrect, transcript = '') {
-                if (isCorrect) {
-                    elements.feedback.textContent = `✅ Đúng rồi! Bạn có thể bắn!`;
-                    elements.feedback.className = "feedback correct";
-                    gameState.canShoot = true;
-                    
-                    elements.shootInstruction.innerHTML = "🎯 NHẤN NÚT BẮN để bắn bóng!";
-                    elements.shootInstruction.style.backgroundColor = "rgba(6,214,160,0.3)";
-                    elements.shootBtn.disabled = false;
-                    
-                    debugLog(`Đọc đúng: ${transcript}`);
-                } else {
-                    elements.feedback.textContent = transcript ? 
-                        `❌ Chưa đúng! Bạn nói: "${transcript}"` : 
-                        `❌ Chưa đúng! Hãy đọc từ "${gameState.wordList[gameState.currentWordIndex].word}"`;
-                    elements.feedback.className = "feedback incorrect";
-                    
-                    if (gameState.gameMode === 'voice') {
-                        setTimeout(() => startListening(), 1500);
-                    }
-                    
-                    debugLog(`Đọc sai: ${transcript || 'không nhận diện được'}`);
-                }
-            }
-            
-            // ===== GAME FUNCTIONS =====
-            
-            function selectRandomWord() {
-                if (!gameState.wordList || gameState.wordList.length === 0) return;
-                
-                gameState.currentWordIndex = Math.floor(Math.random() * gameState.wordList.length);
-                elements.currentWord.textContent = gameState.wordList[gameState.currentWordIndex].word;
-                elements.sentenceDisplay.textContent = gameState.wordList[gameState.currentWordIndex].sentence;
-            }
-            
-            function updateUI() {
-                elements.round.textContent = gameState.round;
-                elements.score.textContent = gameState.score;
-                elements.shots.textContent = `${gameState.shots}/${gameState.maxShots}`;
-                elements.ballsLeft.textContent = gameState.balls.length;
-            }
-            
-            function updateModeDisplay() {
-                if (gameState.gameMode === 'voice') {
-                    elements.voiceModeBtn.classList.add('active');
-                    elements.manualModeBtn.classList.remove('active');
-                    elements.manualControl.style.display = 'none';
-                    elements.readBtn.style.display = 'flex';
-                } else {
-                    elements.manualModeBtn.classList.add('active');
-                    elements.voiceModeBtn.classList.remove('active');
-                    elements.manualControl.style.display = 'block';
-                    elements.readBtn.style.display = 'flex';
-                }
-            }
-            
-            function initBalls() {
-                gameState.balls = [];
-                const container = elements.canvas.parentElement;
-                const width = container.clientWidth;
-                const height = container.clientHeight;
-                
-                for (let i = 0; i < 10; i++) {
-                    const radius = 15 + Math.random() * 25;
-                    gameState.balls.push({
-                        x: radius + Math.random() * (width - radius * 2),
-                        y: radius + Math.random() * (height / 2 - radius * 2),
-                        radius: radius,
-                        speedX: (Math.random() - 0.5) * 4,
-                        speedY: (Math.random() - 0.5) * 4,
-                        color: getRandomColor(),
-                        points: Math.round(50 - radius)
-                    });
-                }
-                
-                updateUI();
-            }
-            
-            function initGame() {
-                if (gameState.wordList.length === 0) return false;
-                
-                gameState.shots = 0;
-                gameState.score = 0;
-                gameState.canShoot = false;
-                gameState.gameActive = true;
-                gameState.isListening = false;
-                gameState.balls = [];
-                gameState.bullets = [];
-                
-                // Khởi tạo súng
-                const container = elements.canvas.parentElement;
-                gameState.cannon.x = container.clientWidth / 2;
-                gameState.cannon.y = container.clientHeight - 40;
-                gameState.cannon.angle = 0;
-                
-                // Tạo bóng
-                initBalls();
-                
-                // Chọn từ
-                selectRandomWord();
-                
-                // Cập nhật UI
-                updateUI();
-                
-                // Khởi tạo speech
-                if (gameState.gameMode === 'voice') {
-                    initSpeechRecognition();
-                }
-                
-                elements.feedback.textContent = gameState.gameMode === 'voice' 
-                    ? "🎤 Nhấn nút đọc và đọc to từ trên màn hình" 
-                    : "👆 Đọc to từ và nhấn 'Tôi đã đọc đúng'";
-                elements.feedback.className = "feedback";
-                
-                elements.shootBtn.disabled = true;
-                elements.shootInstruction.innerHTML = "🎯 Đọc đúng từ để được bắn!";
-                elements.shootInstruction.style.backgroundColor = "rgba(255,215,0,0.3)";
-                
-                return true;
-            }
-            
-            function shoot() {
-                if (!gameState.canShoot || gameState.shots >= gameState.maxShots) return;
-                
-                gameState.shots++;
-                gameState.canShoot = false;
-                elements.shootBtn.disabled = true;
-                
-                // Tạo đạn
-                const bulletSpeed = 12;
-                gameState.bullets.push({
-                    x: gameState.cannon.x + Math.cos(gameState.cannon.angle) * 30,
-                    y: gameState.cannon.y + Math.sin(gameState.cannon.angle) * 30,
-                    speedX: Math.cos(gameState.cannon.angle) * bulletSpeed,
-                    speedY: Math.sin(gameState.cannon.angle) * bulletSpeed,
-                    angle: gameState.cannon.angle
-                });
-                
-                // Hiệu ứng rung
-                elements.canvas.style.transform = 'translateX(2px)';
-                setTimeout(() => elements.canvas.style.transform = 'translateX(-2px)', 50);
-                setTimeout(() => elements.canvas.style.transform = 'translateX(0)', 100);
-                
-                // Chọn từ mới
-                selectRandomWord();
-                
-                updateUI();
-                
-                elements.feedback.textContent = "🔫 Đã bắn! Hãy đọc từ mới để bắn tiếp!";
-                elements.feedback.className = "feedback";
-                elements.shootInstruction.innerHTML = "🎯 Đọc đúng từ để bắn!";
-                
-                if (gameState.gameMode === 'voice') {
-                    setTimeout(() => startListening(), 500);
-                }
-                
-                // Kiểm tra kết thúc lượt
-                if (gameState.shots >= gameState.maxShots) {
-                    setTimeout(() => {
-                        endRound();
-                    }, 1000);
-                }
-            }
-            
-            function endRound() {
-                gameState.gameActive = false;
-                elements.messageTitle.textContent = "🎉 Hoàn thành lượt chơi!";
-                elements.messageText.textContent = `Bạn đã bắn ${gameState.shots} lần, hạ được ${10 - gameState.balls.length} bóng, đạt ${gameState.score} điểm!`;
-                elements.messageModal.style.display = 'block';
-            }
-            
-            // ===== DRAWING FUNCTIONS =====
-            
-            function resizeCanvas() {
-                if (!elements.canvas || !ctx) return;
-                
-                const container = elements.canvas.parentElement;
-                const rect = container.getBoundingClientRect();
-                
-                elements.canvas.width = rect.width * window.devicePixelRatio || 1;
-                elements.canvas.height = rect.height * window.devicePixelRatio || 1;
-                
-                ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-                elements.canvas.style.width = rect.width + 'px';
-                elements.canvas.style.height = rect.height + 'px';
-                
-                if (gameState.gameActive) {
-                    gameState.cannon.x = rect.width / 2;
-                    gameState.cannon.y = rect.height - 40;
-                }
-            }
-            
-            function draw() {
-                if (!ctx || !elements.canvas) return;
-                
-                const canvas = elements.canvas;
-                const width = canvas.clientWidth;
-                const height = canvas.clientHeight;
-                
-                ctx.clearRect(0, 0, width, height);
-                
-                // Vẽ nền
-                const gradient = ctx.createLinearGradient(0, 0, 0, height);
-                gradient.addColorStop(0, '#87CEEB');
-                gradient.addColorStop(0.7, '#98FB98');
-                gradient.addColorStop(1, '#E9F5DB');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, width, height);
-                
-                // Vẽ bóng
-                gameState.balls.forEach(ball => {
-                    ctx.beginPath();
-                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-                    
-                    const gradient = ctx.createRadialGradient(
-                        ball.x - ball.radius/3, ball.y - ball.radius/3, 1,
-                        ball.x, ball.y, ball.radius
-                    );
-                    gradient.addColorStop(0, 'rgba(255,255,255,0.8)');
-                    gradient.addColorStop(0.3, ball.color);
-                    gradient.addColorStop(1, darkenColor(ball.color, 0.3));
-                    
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-                    
-                    ctx.strokeStyle = darkenColor(ball.color, 0.4);
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                });
-                
-                // Vẽ đạn
-                gameState.bullets.forEach((bullet, index) => {
-                    bullet.x += bullet.speedX;
-                    bullet.y += bullet.speedY;
-                    
-                    ctx.beginPath();
-                    ctx.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2);
-                    
-                    const gradient = ctx.createRadialGradient(
-                        bullet.x - 2, bullet.y - 2, 1,
-                        bullet.x, bullet.y, 5
-                    );
-                    gradient.addColorStop(0, '#FFF');
-                    gradient.addColorStop(0.5, '#FF6B6B');
-                    gradient.addColorStop(1, '#333');
-                    
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-                    
-                    // Kiểm tra va chạm
-                    gameState.balls.forEach((ball, ballIndex) => {
-                        const dx = bullet.x - ball.x;
-                        const dy = bullet.y - ball.y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        
-                        if (dist < ball.radius + 5) {
-                            gameState.bullets.splice(index, 1);
-                            gameState.score += ball.points;
-                            gameState.balls.splice(ballIndex, 1);
-                            
-                            if (gameState.balls.length === 0) {
-                                initBalls();
-                            }
-                            
-                            updateUI();
-                        }
-                    });
-                    
-                    // Xóa đạn ra ngoài
-                    if (bullet.x < 0 || bullet.x > width || bullet.y < 0 || bullet.y > height) {
-                        gameState.bullets.splice(index, 1);
-                    }
-                });
-                
-                // Vẽ súng
-                ctx.save();
-                ctx.translate(gameState.cannon.x, gameState.cannon.y);
-                ctx.rotate(gameState.cannon.angle);
-                
-                // Thân súng
-                ctx.fillStyle = '#555';
-                ctx.fillRect(-gameState.cannon.width/2, -gameState.cannon.height/2, gameState.cannon.width, gameState.cannon.height);
-                
-                // Nòng súng
-                ctx.fillStyle = '#333';
-                ctx.fillRect(0, -6, 40, 12);
-                
-                // Bánh xe
-                ctx.fillStyle = '#777';
-                ctx.beginPath();
-                ctx.arc(-15, 12, 10, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(15, 12, 10, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.restore();
-            }
-            
-            function gameLoop() {
-                if (!gameState.gameActive) return;
-                
-                // Di chuyển súng
-                if (gameState.leftPressed) {
-                    gameState.cannon.x -= gameState.cannon.speed;
-                }
-                if (gameState.rightPressed) {
-                    gameState.cannon.x += gameState.cannon.speed;
-                }
-                
-                const container = elements.canvas.parentElement;
-                gameState.cannon.x = Math.max(40, Math.min(container.clientWidth - 40, gameState.cannon.x));
-                
-                // Cập nhật góc súng theo vị trí chạm
-                if (gameState.touchX && gameState.touchY) {
-                    const dx = gameState.touchX - gameState.cannon.x;
-                    const dy = gameState.touchY - gameState.cannon.y;
-                    gameState.cannon.angle = Math.atan2(dy, dx);
-                    gameState.cannon.angle = Math.max(-Math.PI/2, Math.min(-Math.PI/6, gameState.cannon.angle));
-                }
-                
-                // Di chuyển bóng
-                gameState.balls.forEach(ball => {
-                    ball.x += ball.speedX;
-                    ball.y += ball.speedY;
-                    
-                    if (ball.x - ball.radius < 0 || ball.x + ball.radius > container.clientWidth) {
-                        ball.speedX *= -1;
-                    }
-                    if (ball.y - ball.radius < 0 || ball.y + ball.radius > container.clientHeight - 80) {
-                        ball.speedY *= -1;
-                    }
-                });
-                
-                draw();
-                requestAnimationFrame(gameLoop);
-            }
-            
-            // ===== EVENT HANDLERS =====
-            
-            function setupEventListeners() {
-                // Load example
-                elements.loadExampleBtn.addEventListener('click', loadExampleWords);
-                
-                // Start game
-                elements.startGameBtn.addEventListener('click', () => {
-                    const text = elements.wordsInput.value.trim();
-                    if (!text) {
-                        alert("Vui lòng nhập danh sách từ!");
-                        return;
-                    }
-                    
-                    gameState.wordList = parseWordsInput(text);
-                    if (gameState.wordList.length === 0) {
-                        alert("Không có từ hợp lệ!");
-                        return;
-                    }
-                    
-                    elements.inputForm.style.display = 'none';
-                    elements.statsBar.style.display = 'grid';
-                    elements.gameArea.style.display = 'flex';
-                    
-                    setTimeout(() => {
-                        resizeCanvas();
-                        if (initGame()) {
-                            requestAnimationFrame(gameLoop);
-                        }
-                    }, 100);
-                });
-                
-                // Mode selection
-                elements.voiceModeBtn.addEventListener('click', () => {
-                    gameState.gameMode = 'voice';
-                    updateModeDisplay();
-                });
-                
-                elements.manualModeBtn.addEventListener('click', () => {
-                    gameState.gameMode = 'manual';
-                    updateModeDisplay();
-                    
-                    if (gameState.isListening && gameState.recognition) {
-                        gameState.recognition.stop();
-                    }
-                });
-                
-                // Read button
-                elements.readBtn.addEventListener('click', () => {
-                    if (gameState.gameMode === 'voice') {
-                        if (gameState.isListening) {
-                            if (gameState.recognition) gameState.recognition.stop();
-                        } else {
-                            startListening();
-                        }
-                    } else {
-                        // Manual mode - just show instruction
-                        elements.feedback.textContent = `👆 Đọc từ "${gameState.wordList[gameState.currentWordIndex].word}" và nhấn "Tôi đã đọc đúng"`;
-                        elements.feedback.className = "feedback";
-                    }
-                });
-                
-                // Manual correct button
-                elements.manualCorrectBtn.addEventListener('click', () => {
-                    if (gameState.gameMode === 'manual') {
-                        handleReadingResult(true);
-                    }
-                });
-                
-                // Movement buttons
-                elements.moveLeftBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    gameState.leftPressed = true;
-                });
-                elements.moveLeftBtn.addEventListener('touchend', () => gameState.leftPressed = false);
-                elements.moveLeftBtn.addEventListener('mousedown', () => gameState.leftPressed = true);
-                elements.moveLeftBtn.addEventListener('mouseup', () => gameState.leftPressed = false);
-                elements.moveLeftBtn.addEventListener('mouseleave', () => gameState.leftPressed = false);
-                
-                elements.moveRightBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    gameState.rightPressed = true;
-                });
-                elements.moveRightBtn.addEventListener('touchend', () => gameState.rightPressed = false);
-                elements.moveRightBtn.addEventListener('mousedown', () => gameState.rightPressed = true);
-                elements.moveRightBtn.addEventListener('mouseup', () => gameState.rightPressed = false);
-                elements.moveRightBtn.addEventListener('mouseleave', () => gameState.rightPressed = false);
-                
-                // Shoot button
-                elements.shootBtn.addEventListener('click', shoot);
-                elements.shootBtn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    shoot();
-                });
-                
-                // Canvas touch for aiming
-                elements.canvas.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    const rect = elements.canvas.getBoundingClientRect();
-                    const touch = e.touches[0];
-                    gameState.touchX = touch.clientX - rect.left;
-                    gameState.touchY = touch.clientY - rect.top;
-                });
-                
-                elements.canvas.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    const rect = elements.canvas.getBoundingClientRect();
-                    const touch = e.touches[0];
-                    gameState.touchX = touch.clientX - rect.left;
-                    gameState.touchY = touch.clientY - rect.top;
-                });
-                
-                elements.canvas.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    gameState.touchX = gameState.cannon.x;
-                    gameState.touchY = gameState.cannon.y - 50;
-                });
-                
-                // Mouse for desktop
-                elements.canvas.addEventListener('mousemove', (e) => {
-                    if (!isMobile) {
-                        const rect = elements.canvas.getBoundingClientRect();
-                        gameState.touchX = e.clientX - rect.left;
-                        gameState.touchY = e.clientY - rect.top;
-                    }
-                });
-                
-                // New game
-                elements.newGameBtn.addEventListener('click', () => {
-                    elements.inputForm.style.display = 'flex';
-                    elements.statsBar.style.display = 'none';
-                    elements.gameArea.style.display = 'none';
-                    elements.messageModal.style.display = 'none';
-                    gameState.gameActive = false;
-                    
-                    if (gameState.recognition && gameState.isListening) {
-                        gameState.recognition.stop();
-                    }
-                });
-                
-                // Close message
-                elements.closeMessageBtn.addEventListener('click', () => {
-                    elements.messageModal.style.display = 'none';
-                    gameState.round++;
-                    
-                    if (gameState.gameActive) {
-                        gameState.shots = 0;
-                        gameState.canShoot = false;
-                        gameState.bullets = [];
-                        initBalls();
-                        selectRandomWord();
-                        updateUI();
-                        
-                        if (gameState.gameMode === 'voice') {
-                            setTimeout(() => startListening(), 500);
-                        }
-                    }
-                });
-                
-                // Window resize
-                window.addEventListener('resize', resizeCanvas);
-                window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 100));
-            }
-            
-            // ===== INITIALIZATION =====
-            
-            function init() {
-                debugLog("Khởi tạo game...");
-                
-                // Get canvas context
-                ctx = elements.canvas.getContext('2d');
-                
-                // Set up event listeners
-                setupEventListeners();
-                
-                // Load example words
-                loadExampleWords();
-                
-                // Set initial mode
-                updateModeDisplay();
-                
-                debugLog(`Mobile: ${isMobile}, iOS: ${isIOS}, Android: ${isAndroid}`);
-                debugLog(`Speech supported: ${isSpeechSupported}`);
-            }
-            
-            // Start when DOM ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-        })();
-    </script>
+    <div id="gameArea" class="hidden">
+        <div id="word">Đang tải...</div>
+
+        <div class="controls">
+            <button id="wrongBtn">THỬ LẠI</button>
+            <button id="correctBtn">ĐÚNG</button>
+        </div>
+
+        <div id="raceTrack">
+            <div id="finishLine"></div>
+            <div id="car">🏎️</div>
+        </div>
+
+        <div id="summary" class="hidden"></div>
+    </div>
+</div>
+
+<script>
+    let words = [];
+    let currentIndex = 0;
+    let correctCount = 0;
+    let totalAttempts = 0;
+    let startTime;
+    let wordStartTime;
+    let wordStats = [];
+
+    const car = document.getElementById("car");
+    const wordDisplay = document.getElementById("word");
+    const gameArea = document.getElementById("gameArea");
+    const setup = document.getElementById("setup");
+    const summary = document.getElementById("summary");
+
+    document.getElementById("startBtn").addEventListener("click", () => {
+        const input = document.getElementById("wordInput").value.trim();
+        if (!input) {
+            document.getElementById("setupMessage").innerText = "Hãy nhập ít nhất vài từ nhé!";
+            return;
+        }
+
+        words = input.split(/[\n,]+/).map(w => w.trim()).filter(w => w !== "");
+        words = words.sort(() => Math.random() - 0.5); // Trộn từ
+
+        setup.classList.add("hidden");
+        gameArea.classList.remove("hidden");
+        
+        startGame();
+    });
+
+    function startGame() {
+        startTime = Date.now();
+        currentIndex = 0;
+        correctCount = 0;
+        totalAttempts = 0;
+        wordStats = [];
+        showWord();
+    }
+
+    function showWord() {
+        if (currentIndex < words.length) {
+            wordDisplay.textContent = words[currentIndex];
+            wordStartTime = Date.now();
+        } else {
+            endGame();
+        }
+    }
+
+    function moveCar() {
+        const progress = (correctCount / words.length) * 85; 
+        car.style.left = progress + "%";
+    }
+
+    document.getElementById("correctBtn").addEventListener("click", () => {
+        const timeTaken = ((Date.now() - wordStartTime) / 1000).toFixed(2);
+        wordStats.push({ word: words[currentIndex], time: timeTaken, status: "Đúng" });
+        
+        correctCount++;
+        totalAttempts++;
+        currentIndex++;
+        
+        moveCar();
+        showWord();
+        if (navigator.vibrate) navigator.vibrate(50); // Rung nhẹ khi bấm đúng
+    });
+
+    document.getElementById("wrongBtn").addEventListener("click", () => {
+        totalAttempts++;
+        wordDisplay.style.color = "red";
+        setTimeout(() => { wordDisplay.style.color = "#333"; }, 300);
+        if (navigator.vibrate) navigator.vibrate([50, 50]); // Rung cảnh báo
+    });
+
+    function endGame() {
+        const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+        wordDisplay.textContent = "🏆 HOÀN THÀNH!";
+        summary.classList.remove("hidden");
+        
+        let statsHTML = `
+            <b>KẾT QUẢ:</b><br>
+            ⏱ Tổng thời gian: ${totalTime} giây<br>
+            🎯 Tổng lượt bấm: ${totalAttempts}<br>
+            📈 Trung bình: ${(totalTime / words.length).toFixed(2)}s/từ<br><br>
+            <b>CHI TIẾT:</b><br>
+        `;
+        
+        wordStats.forEach(s => {
+            statsHTML += `• ${s.word}: ${s.time}s<br>`;
+        });
+
+        summary.innerHTML = statsHTML;
+        document.querySelector(".controls").classList.add("hidden");
+    }
+</script>
+
 </body>
 </html>
